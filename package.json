@@ -1,0 +1,24 @@
+{
+  "name": "lottery-ticket-system",
+  "version": "1.0.0",
+  "description": "Lottery Ticket REST interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anjoeaj/lottery-ticket-system.git"
+  },
+  "author": "Anjoe Anand Jacob",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anjoeaj/lottery-ticket-system/issues"
+  },
+  "homepage": "https://github.com/anjoeaj/lottery-ticket-system#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.9.1"
+  }
+}

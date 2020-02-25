@@ -7,11 +7,15 @@
 var express = require('express');
 var createError = require('http-errors');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
 
 // delete require.cache[require.resolve('./routes/index')]
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -72,44 +72,14 @@ exports.ticketList = (req, res, next) => {
 
 exports.generateTicket = (req, res, next) => {
 
-    // check('lines').isLength({min:4});
-    // const errors = validationResult(req)
-    // if (!errors.isEmpty()) {
-    //     return res.status(422).json({ errors: errors.array() })
-    // }
     let linesFromRequest = req.body.lines;
-    //TODO validation
-    //check if lines is in valid format
-
-    let constructedLines = [];
-    //construct Line from input
-    //call constructLine for each line in the input request
-    linesFromRequest.forEach(lineNumbers => {
-        let lineAndOutcome = constructLine(lineNumbers);
-        if(lineAndOutcome != {}){
-            constructedLines.push(lineAndOutcome);
-        }
-    });
-
-    //DSC query param
-    //sort the lines in ASC order based on outcome before inserting to db
-    constructedLines.sort((a,b) => a.outcome - b.outcome);
-    //TODO confirm a,b??
-
-    // let sampleLine1 = new line(line0);
-    let sampleTicket = new lottery_ticket({
-        lines : constructedLines,
-        status : STATUS_UNCHECKED
-    });
-
-    sampleTicket.save().then((doc)=>{
-        console.log("Save callback - "+doc);
-        //doc.
-    });
+    let lotteryTicket = lottery_ticket.generateTicket(linesFromRequest);
+    res.status(200);
+    res.send(lotteryTicket);
     //TODO add failure handling
 
     //TODO send id back
-    res.send("generate a ticket");
+    
 }
 
 exports.getTicket = (req, res, next) => {
@@ -126,27 +96,24 @@ exports.amendTicket = (req, res, next) => {
     //read the ticket from the database
     //add new lines
     //sort the lines
+    //save to db
 
     lottery_ticket.findById(req.params.id, (err, dbResult) => {
         console.log("AMEND LINES");
         if (dbResult.status == config.STATUS_CHECKED){
             //cant amend TODO err
         }
-        let lines = dbResult.lines;
-        let newLines = req.body.lines;
-        
-        newLines.forEach(line => {
-            let lineObj = constructLine(line);
-            lines = lines.concat(lineObj);
-        });
-        
-        lines.sort((a,b) => a.outcome - b.outcome);
 
-        dbResult.lines = lines;
-        dbResult.save();
+        let newLines = req.body.lines;
+        dbResult.amendTicket(newLines);
+
+        delete dbResult.lines._id;
+
+        res.status(200);
+        res.send(dbResult);
     });
     
-    res.send("amend a ticket");
+    
 }
 
 exports.ticketStatus = (req, res, next) => {
@@ -160,7 +127,7 @@ exports.ticketStatus = (req, res, next) => {
             dbResult.status = config.STATUS_CHECKED;
             dbResult.save();
         }
-        res.send({id: dbResult._id, status : dbResult.status});
+        res.send({id: dbResult._id, status : currentStatus});
 
     });
     

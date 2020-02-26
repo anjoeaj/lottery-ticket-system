@@ -19,7 +19,7 @@
             outcome : Number
         }
      ],
-     status: Boolean
+     status: String
  });
 
  module.exports = mongoose.model("lottery_ticket", lotteryTicket);

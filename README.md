@@ -35,4 +35,7 @@ Run tests
 npm run test
 ```
 
+## Test Report
+Code coverage
+![example picture](./tests/report/coverage.png)
 

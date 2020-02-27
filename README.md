@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/anjoeaj/lottery-ticket-system/workflows/Node.js%20CI/badge.svg?branch=develop)
+
 # Lottery Ticket System Web Service
 
 This is a REST interface for a Lottery Ticket System implemented using NodeJS and ExpressJS 

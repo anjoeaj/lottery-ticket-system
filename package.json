@@ -4,10 +4,12 @@
   "description": "Lottery Ticket REST interface",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
     "start": "node ./bin/www",
     "debug": "node --inspect-brk ./bin/www",
-    "allure-server": "allure serve"
+    "allure-server": "allure serve",
+    "jest-config" : "jest --showConfig",
+    "jest-clear" : "jest --clearCache"
   },
   "repository": {
     "type": "git",

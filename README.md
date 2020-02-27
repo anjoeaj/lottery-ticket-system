@@ -2,7 +2,7 @@
 
 This is a REST interface for a Lottery Ticket System implemented using NodeJS and ExpressJS 
 
-##Description
+## Description
 There are 5 API endpoints available
  * /ticket POST Create a ticket
  * /ticket GET Return list of tickets
@@ -10,7 +10,7 @@ There are 5 API endpoints available
  * /ticket/:id PUT Amend ticket lines
  * /status/:id PUT Retrieve status of ticket
 
-##Installation
+## Installation
 
 Go to the root folder and install the dependencies
 
@@ -18,7 +18,7 @@ Go to the root folder and install the dependencies
 npm install
 ```
 
-##Usage
+## Usage
 
 Start the server
 ```bash

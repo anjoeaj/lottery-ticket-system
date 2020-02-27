@@ -93,7 +93,7 @@ describe('Get an individual lottery ticket', () => {
 describe('Amend a lottery ticket', () => {
     it('add 2 new lines to the lottery ticket', async () => {
         const res = await request(app)
-            .put('/ticket/5e578df4ef32e7c124c53f2c')
+            .put('/ticket/5e5796308724e4cd1452dee3')
             .send({
                 "lines": [
                     [
@@ -113,14 +113,14 @@ describe('Amend a lottery ticket', () => {
 
     it('should check status once', async () => {
         const res = await request(app)
-            .put('/status/5e578df4ef32e7c124c53f2c')
+            .put('/status/5e5796308724e4cd1452dee3')
             .send()
         expect(res.statusCode).toEqual(200)
     })
 
     it('should fail and return 400 when tried to amend again after checking status', async () => {
         const res = await request(app)
-            .put('/ticket/5e578df4ef32e7c124c53f2c')
+            .put('/ticket/5e5796308724e4cd1452dee3')
             .send({
                 "lines": [
                     [

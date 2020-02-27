@@ -4,9 +4,10 @@
   "description": "Lottery Ticket REST interface",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "node ./bin/www",
-    "debug": "node --inspect-brk ./bin/www"
+    "debug": "node --inspect-brk ./bin/www",
+    "allure-server": "allure serve"
   },
   "repository": {
     "type": "git",
@@ -26,11 +27,16 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "allure-commandline": "^2.13.0",
     "jest": "^25.1.0",
+    "jest-allure": "^0.1.1",
     "supertest": "^4.0.2"
   },
   "jest": {
     "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "jest-allure/dist/setup"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ]

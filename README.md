@@ -36,6 +36,8 @@ npm run test
 ```
 
 ## Test Report
+Summary
+![example picture](./tests/report/home.png)
 Code coverage
 ![example picture](./tests/report/coverage.png)
 

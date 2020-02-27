@@ -6,21 +6,21 @@
  * 
  */
 
- let mongoose = require('mongoose');
- let line = require('./line');
- const config = require("../config/index");
+let mongoose = require('mongoose');
+let line = require('./line');
+const config = require("../config/index");
 
- let Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
- let lotteryTicketSchema = new Schema({
-     lines : [line.schema],
-     status: String
- });
+let lotteryTicketSchema = new Schema({
+    lines: [line.schema],
+    status: String
+});
 
- lotteryTicketSchema.statics.generateTicket = function (lineNumbers) {
+lotteryTicketSchema.statics.generateTicket = function (lineNumbers) {
     let lotteryTicket = new this({
-        lines : [],
-        status : config.STATUS_UNCHECKED
+        lines: [],
+        status: config.STATUS_UNCHECKED
     });
 
     //TODO validation
@@ -31,36 +31,33 @@
     //call constructLine for each line in the input request
     lineNumbers.forEach(lineNumbers => {
         let lineAndOutcome = line.constructLine(lineNumbers);
-        if(lineAndOutcome != {}){
+        if (lineAndOutcome != {}) {
             constructedLines.push(lineAndOutcome);
         }
     });
 
     //DSC query param
     //sort the lines in ASC order based on outcome before inserting to db
-    constructedLines.sort((a,b) => a.outcome - b.outcome);
-    //TODO confirm a,b??
+    constructedLines.sort((a, b) => a.outcome - b.outcome);
 
-    // let sampleLine1 = new line(line0);
-    
     lotteryTicket.lines = constructedLines;
-    lotteryTicket.save().then((doc)=>{
-        console.log("Save callback - "+doc);
+    lotteryTicket.save().then((err, doc) => {
+        console.log("Save callback - " + doc);
         //doc.
     });
 
     return lotteryTicket;
- }
+}
 
- lotteryTicketSchema.methods.amendTicket = function (newLines){
-    
+lotteryTicketSchema.methods.amendTicket = function (newLines) {
+
     newLines.forEach(newLine => {
         let lineObj = line.constructLine(newLine);
         this.lines = this.lines.concat(lineObj);
     });
-    
-    this.lines.sort((a,b) => a.outcome - b.outcome);
-    this.save();
- }
 
- module.exports = mongoose.model("lottery_ticket", lotteryTicketSchema);
+    this.lines.sort((a, b) => a.outcome - b.outcome);
+    this.save();
+}
+
+module.exports = mongoose.model("lottery_ticket", lotteryTicketSchema);

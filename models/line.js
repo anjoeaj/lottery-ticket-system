@@ -7,46 +7,39 @@
 
 let mongoose = require('mongoose');
 const utils = require('../utils/utils');
+const errors = require("../config/errors");
+const config = require("../config/index");
+const { HTTPErrorHandler } = require("../utils/error");
+
 let Schema = mongoose.Schema;
 
 let lineSchema = new Schema({
-    numbers : [Number],
-    outcome : Number
+    numbers: [Number],
+    outcome: Number
 });
 
 /**
  * This function pre-calculates the outcome based on the numbers for each line before creating a line and storing on db.
  */
 lineSchema.statics.constructLine = function (lineNumbers) {
-    
-    if (lineNumbers.length != 3){
+
+    if (lineNumbers.length != config.LINE_LENGTH) {
         //TODO 3 should go in config
-        //invalid
-        return {};
+        throw new HTTPErrorHandler(404, errors.LINE_NUMBERS_COUNT_INVALID);
     }
 
     //validation to check if num are 0, 1, 2
     let validNumbers = [0, 1, 2];
     lineNumbers.forEach(lineNum => {
-        if(!validNumbers.includes(lineNum)){
+        if (!validNumbers.includes(lineNum)) {
             //invalid number present in line
-            return {};
+            throw new HTTPErrorHandler(404, errors.INVALID_LINE_NUMBERS);
         }
     });
 
-    let sum = utils.arraySum(lineNumbers);
-    let result = 0;
-    if(sum == 2){
-        result = 10;
-    }else if(utils.doesArrayContainEqualValues(lineNumbers)){
-        result = 5;
-    }else if(utils.isFirstElementDifferentFromOthers(lineNumbers)){
-        result = 1;
-    }
-
     let line = new this({
-        numbers : lineNumbers,
-        outcome : result
+        numbers: lineNumbers,
+        outcome: this.computeOutcome(lineNumbers)
     })
 
     line.save();
@@ -54,44 +47,23 @@ lineSchema.statics.constructLine = function (lineNumbers) {
     return line;
 }
 
+/**
+ * Function to compute the outcome of a line based on the numbers
+ */
+lineSchema.statics.computeOutcome = function (lineNumbers) {
+
+    let result = 0;
+    let sum = utils.arraySum(lineNumbers);
+
+    if (sum == 2) {
+        result = 10;
+    } else if (utils.doesArrayContainEqualValues(lineNumbers)) {
+        result = 5;
+    } else if (utils.isFirstElementDifferentFromOthers(lineNumbers)) {
+        result = 1;
+    }
+
+    return result;
+}
+
 module.exports = mongoose.model("Line", lineSchema);
-
-// class Line{
-//     constructor(numbers){
-//         numbers = numbers;
-//         this.outcome = 0;
-//         this.constructLine();
-//     }
-
-//     constructLine(){
-    
-//         if (numbers.length != 3){
-//             //TODO 3 should go in config
-//             //invalid
-//             return {};
-//         }
-    
-//         //validation to check if num are 0, 1, 2
-//         let validNumbers = [0, 1, 2];
-//         numbers.forEach(lineNum => {
-//             if(!validNumbers.includes(lineNum)){
-//                 //invalid number present in line
-//                 return {};
-//             }
-//         });
-    
-//         let sum = utils.arraySum(numbers);
-//         if(sum == 2){
-//             this.outcome = 10;
-//         }else if(utils.doesArrayContainEqualValues(numbers)){
-//             this.outcome = 5;
-//         }else if(utils.isFirstElementDifferentFromOthers(numbers)){
-//             this.outcome = 1;
-//         }
-
-//         return this;
-//     }
-// }
-
-// module.exports = Line;
-

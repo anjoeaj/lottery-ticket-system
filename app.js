@@ -14,7 +14,6 @@
 
 var express = require('express');
 var createError = require('http-errors');
-var logger = require('morgan');
 var bodyParser = require('body-parser');
 const {handleError} = require("./utils/error");
 
@@ -25,20 +24,10 @@ var app = express();
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-app.use(logger('dev'));
-app.use(express.json());
-
-//This is a built-in middleware function in Express. 
-//It parses incoming requests with urlencoded payloads and is based on body-parser.
-app.use(express.urlencoded({extended: false}));
-// app.use(express.json);
+//the api routes are stored in indexRouter
 app.use('/', indexRouter);
 
-//catch 404 and forward to error handler
-app.use((req, res, next) => {
-    next(handleError(err, res));
-});
-
+//catch errors and forward to error handler
 app.use((err, req, res, next) => {
     handleError(err, res);
 });

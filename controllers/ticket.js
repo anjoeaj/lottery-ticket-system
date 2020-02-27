@@ -8,7 +8,7 @@ const { HTTPError } = require("../utils/error");
 
 const { check, validationResult } = require('express-validator');
 
-mongoose.connect(config.DB_URL, { useNewUrlParser: true }).
+mongoose.connect(config.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).
     catch((err) => {
         console.log('MongoDB connection error: ' + err);
         process.exit(1);

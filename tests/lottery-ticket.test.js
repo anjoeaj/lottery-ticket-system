@@ -1,6 +1,8 @@
 let lottery_ticket = require('../models/lottery-ticket');
 const config = require("../config/index");
 
+
+
 describe('Generate lottery ticket', () => {
     it('should create 1 lottery ticket with 2 lines', () => {
         let lines = [[0, 0, 0], [1, 0, 0]];
@@ -48,13 +50,6 @@ describe('Amend a lottery ticket', () => {
         expect(lotteryTicket.lines).toHaveLength(lines.length + originalLength);
     });
 
-    // it('should create 1 lottery ticket with 6 lines', () => {
-    //     let lines = [[0, 0, 0], [1, 0, 0], [0, 2, 0], [1, 0, 0], [0, 1, 0], [1, 2, 0]];
-    //     let lotteryTicket = lottery_ticket.amendTicket(lines);
-    //     expect(lotteryTicket._id).toBeDefined();
-    //     expect(lotteryTicket._id).toBeDefined();
-    //     expect(lotteryTicket.lines).toHaveLength(lines.length);
-    // });
 });
 
 describe('Check status of lottery ticket', () => {

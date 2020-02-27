@@ -1,6 +1,14 @@
 /**
  * 
- * Lottery Ticket Web Service
+ * REST interface for a Lottery Ticket System.
+ * 
+ * NodeJS and ExpressJS for APIs
+ * 
+ * /ticket POST Create a ticket
+ * /ticket GET Return list of tickets
+ * /ticket/:id GET Get individual ticket
+ * /ticket/:id PUT Amend ticket lines
+ * /status/:id PUT Retrieve status of ticket
  * 
  */
 
@@ -10,7 +18,6 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 const {handleError} = require("./utils/error");
 
-// delete require.cache[require.resolve('./routes/index')]
 var indexRouter = require('./routes/index');
 
 var app = express();
@@ -29,7 +36,7 @@ app.use('/', indexRouter);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
-    next(handleError(404));
+    next(handleError(err, res));
 });
 
 app.use((err, req, res, next) => {

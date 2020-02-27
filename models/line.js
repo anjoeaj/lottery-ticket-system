@@ -1,7 +1,7 @@
 /**
- * Line
+ * Line Model
  * 
- * A line can have 3 numbers, and an outcome based on the numbers
+ * A line can have numbers, and an outcome based on the numbers
  * 
  */
 
@@ -9,14 +9,15 @@ let mongoose = require('mongoose');
 const utils = require('../utils/utils');
 const errors = require("../config/errors");
 const config = require("../config/index");
-const { HTTPErrorHandler } = require("../utils/error");
+const { HTTPError } = require("../utils/error");
 
 let Schema = mongoose.Schema;
 
+//create a schema for a line. Since no id is required for this sub-document, it is set as false during definition.
 let lineSchema = new Schema({
     numbers: [Number],
     outcome: Number
-});
+}); 
 
 /**
  * This function pre-calculates the outcome based on the numbers for each line before creating a line and storing on db.
@@ -24,8 +25,7 @@ let lineSchema = new Schema({
 lineSchema.statics.constructLine = function (lineNumbers) {
 
     if (lineNumbers.length != config.LINE_LENGTH) {
-        //TODO 3 should go in config
-        throw new HTTPErrorHandler(404, errors.LINE_NUMBERS_COUNT_INVALID);
+        throw new HTTPError(400, errors.LINE_NUMBERS_COUNT_INVALID);
     }
 
     //validation to check if num are 0, 1, 2
@@ -33,7 +33,7 @@ lineSchema.statics.constructLine = function (lineNumbers) {
     lineNumbers.forEach(lineNum => {
         if (!validNumbers.includes(lineNum)) {
             //invalid number present in line
-            throw new HTTPErrorHandler(404, errors.INVALID_LINE_NUMBERS);
+            throw new HTTPError(400, errors.INVALID_LINE_NUMBERS);
         }
     });
 

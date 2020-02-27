@@ -1,5 +1,5 @@
 /**
- * Model for the Lottery Ticket
+ * Lottery Ticket Model
  * 
  * List of lines
  * Status of the ticket
@@ -23,12 +23,7 @@ lotteryTicketSchema.statics.generateTicket = function (lineNumbers) {
         status: config.STATUS_UNCHECKED
     });
 
-    //TODO validation
-    //check if lines is in valid format
-
     let constructedLines = [];
-    //construct Line from input
-    //call constructLine for each line in the input request
     lineNumbers.forEach(lineNumbers => {
         let lineAndOutcome = line.constructLine(lineNumbers);
         if (lineAndOutcome != {}) {
@@ -36,14 +31,11 @@ lotteryTicketSchema.statics.generateTicket = function (lineNumbers) {
         }
     });
 
-    //DSC query param
     //sort the lines in ASC order based on outcome before inserting to db
     constructedLines.sort((a, b) => a.outcome - b.outcome);
 
     lotteryTicket.lines = constructedLines;
-    lotteryTicket.save().then((err, doc) => {
-        console.log("Save callback - " + doc);
-    });
+    lotteryTicket.save();
 
     return lotteryTicket;
 }

@@ -4,7 +4,7 @@ let line = require('../models/line');
 const utils = require('../utils/utils');
 const config = require("../config/index");
 const errors = require("../config/errors");
-const { HTTPErrorHandler } = require("../utils/error");
+const { HTTPError } = require("../utils/error");
 
 const { check, validationResult } = require('express-validator');
 
@@ -28,8 +28,10 @@ exports.ticketList = (req, res, next) => {
 
     lottery_ticket.find((err, dbResult) => {
         if (!dbResult) {
-            throw new HTTPErrorHandler(404, errors.NO_TICKETS_FOUND);
+            return next(new HTTPError(404, errors.NO_TICKETS_FOUND));
         }
+
+        if (err) return next(new HTTPError(400, errors.UNKNOWN_ERROR));
         res.status(200);
         res.send({ tickets: dbResult });
     })
@@ -43,13 +45,14 @@ exports.ticketList = (req, res, next) => {
 exports.generateTicket = (req, res, next) => {
 
     let linesFromRequest = req.body.lines;
+    
     if (linesFromRequest && linesFromRequest.length >= 1) {
         let lotteryTicket = lottery_ticket.generateTicket(linesFromRequest);
         res.status(201);
         res.send(lotteryTicket);
     }
     else {
-        throw new HTTPErrorHandler(400, errors.EMPTY_LINES);
+        throw new HTTPError(400, errors.EMPTY_LINES);
     }
 
 }
@@ -61,8 +64,12 @@ exports.generateTicket = (req, res, next) => {
 exports.getTicket = (req, res, next) => {
 
     lottery_ticket.findById(req.params.id, (err, dbResult) => {
-        if (!dbResult) throw new HTTPErrorHandler(404, errors.TICKET_NOT_FOUND);
+        if (!dbResult)
+            return next(new HTTPError(404, errors.TICKET_NOT_FOUND));
 
+        if (err)
+            return next(new HTTPError(400, errors.UNKNOWN_ERROR));
+        res.status(200);
         res.send({ ticket: dbResult });
     });
 }
@@ -73,13 +80,18 @@ exports.getTicket = (req, res, next) => {
  */
 exports.amendTicket = (req, res, next) => {
 
+    let newLines = req.body.lines;
+    if (!newLines) throw new HTTPError(400, errors.EMPTY_LINES);
+
     lottery_ticket.findById(req.params.id, (err, dbResult) => {
 
-        if (!dbResult) throw new HTTPErrorHandler(404, errors.TICKET_NOT_FOUND);
-        if (dbResult.status == config.STATUS_CHECKED) throw new HTTPErrorHandler(404, errors.STATUS_CHECKED);
+        if (!dbResult)
+            return next(new HTTPError(404, errors.TICKET_NOT_FOUND));
+        if (dbResult.status == config.STATUS_CHECKED)
+            return next(new HTTPError(400, errors.STATUS_CHECKED));
 
-        let newLines = req.body.lines;
-        if (!newLines) throw new HTTPErrorHandler(404, errors.EMPTY_LINES);
+        if (err)
+            return next(new HTTPError(400, errors.UNKNOWN_ERROR));
 
         dbResult.amendTicket(newLines);
 
@@ -96,13 +108,17 @@ exports.ticketStatus = (req, res, next) => {
 
     lottery_ticket.findById(req.params.id, (err, dbResult) => {
 
-        if (!dbResult) throw new HTTPErrorHandler(404, errors.TICKET_NOT_FOUND);
+        if (!dbResult)
+            return next(new HTTPError(404, errors.TICKET_NOT_FOUND));
+
+        if (err)
+            return next(new HTTPError(400, errors.UNKNOWN_ERROR));
+
         let currentStatus = dbResult.status;
         if (currentStatus == config.STATUS_UNCHECKED) {
-            //dbResult.status = config.STATUS_CHECKED;
             dbResult.checkStatus();
-            //dbResult.save();
         }
+        res.status(200);
         res.send({ id: dbResult._id, status: currentStatus });
     });
 

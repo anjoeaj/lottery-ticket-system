@@ -1,5 +1,3 @@
-//test 6 outcomes
-//construct line objects
 
 const line = require("../models/line");
 

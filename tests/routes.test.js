@@ -2,9 +2,10 @@
 
 const request = require('supertest');
 const app = require('../app');
+let ticketId = "";
 
 describe('Post Endpoints', () => {
-    it('should create a new lottery ticket', async () => {
+    it('should create a new lottery ticket', async (done) => {
         const res = await request(app)
             .post('/ticket')
             .send({
@@ -20,11 +21,15 @@ describe('Post Endpoints', () => {
                         0
                     ]
                 ]
-            })
+            });
+        ticketId = res.body._id;
         expect(res.statusCode).toEqual(201)
+        done();
+        //save ticket id for testing later
+
     });
 
-    it('should not create a new lottery ticket when lines has invalid values', async () => {
+    it('should not create a new lottery ticket when lines has invalid values', async (done) => {
         const res = await request(app)
             .post('/ticket')
             .send({
@@ -42,10 +47,11 @@ describe('Post Endpoints', () => {
                 ]
             })
         expect(res.statusCode).toEqual(400);
-        expect(res.text).toContain("Line contains numbers other that are not permitted")
+        expect(res.text).toContain("Line contains numbers other that are not permitted");
+        done();
     });
 
-    it('should not create a new lottery ticket when lines has invalid length', async () => {
+    it('should not create a new lottery ticket when lines has invalid length', async (done) => {
         const res = await request(app)
             .post('/ticket')
             .send({
@@ -66,34 +72,37 @@ describe('Post Endpoints', () => {
                 ]
             })
         expect(res.statusCode).toEqual(400);
-        expect(res.text).toContain("Line number length is more or less than the required length")
+        expect(res.text).toContain("Line number length is more or less than the required length");
+        done();
     });
 });
 
 
 describe('Get all lottery tickets', () => {
-    it('should get all lottery tickets', async () => {
+    it('should get all lottery tickets', async (done) => {
         const res = await request(app)
             .get('/ticket')
             .send()
         expect(res.statusCode).toEqual(200);
         expect(res.body.tickets).toBeInstanceOf(Array);
+        done();
     })
 });
 
 describe('Get an individual lottery ticket', () => {
-    it('should get one lottery ticket', async () => {
+    it('should get one lottery ticket', async (done) => {
         const res = await request(app)
-            .get('/ticket/5e571770b87d4186507bb4ee')
+            .get('/ticket/'+ticketId)
             .send()
-        expect(res.statusCode).toEqual(200)
+        expect(res.statusCode).toEqual(200);
+        done();
     })
 });
 
 describe('Amend a lottery ticket', () => {
-    it('add 2 new lines to the lottery ticket', async () => {
+    it('add 2 new lines to the lottery ticket', async (done) => {
         const res = await request(app)
-            .put('/ticket/5e5796308724e4cd1452dee3')
+            .put('/ticket/'+ticketId)
             .send({
                 "lines": [
                     [
@@ -108,19 +117,21 @@ describe('Amend a lottery ticket', () => {
                     ]
                 ]
             })
-        expect(res.statusCode).toEqual(201)
+        expect(res.statusCode).toEqual(201);
+        done();
     });
 
-    it('should check status once', async () => {
+    it('should check status once', async (done) => {
         const res = await request(app)
-            .put('/status/5e5796308724e4cd1452dee3')
+            .put('/status/'+ticketId)
             .send()
-        expect(res.statusCode).toEqual(200)
+        expect(res.statusCode).toEqual(200);
+        done();
     })
 
-    it('should fail and return 400 when tried to amend again after checking status', async () => {
+    it('should fail and return 400 when tried to amend again after checking status', async (done) => {
         const res = await request(app)
-            .put('/ticket/5e5796308724e4cd1452dee3')
+            .put('/ticket/'+ticketId)
             .send({
                 "lines": [
                     [
@@ -135,16 +146,17 @@ describe('Amend a lottery ticket', () => {
                     ]
                 ]
             })
-        expect(res.statusCode).toEqual(400)
+        expect(res.statusCode).toEqual(400);
+        done();
     });
 });
 
-describe('Get status endpoint', () => {
-    it('should check status', async () => {
-        const res = await request(app)
-            .put('/status/5e55380fb33a4d7a48bfc18a')
-            .send()
-        expect(res.statusCode).toEqual(200)
-    })
-});
+// describe('Get status endpoint', () => {
+//     it('should check status', async () => {
+//         const res = await request(app)
+//             .put('/status/5e55380fb33a4d7a48bfc18a')
+//             .send()
+//         expect(res.statusCode).toEqual(200)
+//     })
+// });
 

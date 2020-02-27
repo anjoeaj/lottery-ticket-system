@@ -32,7 +32,7 @@ npm run debug
 
 Run tests
 ```bash
-npm run debug
+npm run test
 ```
 
 

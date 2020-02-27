@@ -1,4 +1,4 @@
-# lottery-ticket-system
+# Lottery Ticket System Web Service
 
 This is a REST interface for a Lottery Ticket System implemented using NodeJS and ExpressJS 
 
@@ -32,7 +32,7 @@ npm run debug
 
 Run tests
 ```bash
-npm run debug
+npm run test
 ```
 
 

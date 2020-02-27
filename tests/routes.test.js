@@ -76,7 +76,8 @@ describe('Get all lottery tickets', () => {
         const res = await request(app)
             .get('/ticket')
             .send()
-        expect(res.statusCode).toEqual(200)
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.tickets).toBeInstanceOf(Array);
     })
 });
 

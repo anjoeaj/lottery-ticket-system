@@ -1,6 +1,6 @@
-Master ![Node.js CI](https://github.com/anjoeaj/lottery-ticket-system/workflows/Node.js%20CI/badge.svg?branch=master)
+![Node.js CI](https://github.com/anjoeaj/lottery-ticket-system/workflows/Node.js%20CI/badge.svg?branch=master)
 
-develop ![Node.js CI](https://github.com/anjoeaj/lottery-ticket-system/workflows/Node.js%20CI/badge.svg?branch=develop)
+![Node.js CI](https://github.com/anjoeaj/lottery-ticket-system/workflows/Node.js%20CI/badge.svg?branch=develop)
 
 # Lottery Ticket System Web Service
 

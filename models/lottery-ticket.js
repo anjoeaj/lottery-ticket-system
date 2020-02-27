@@ -43,7 +43,6 @@ lotteryTicketSchema.statics.generateTicket = function (lineNumbers) {
     lotteryTicket.lines = constructedLines;
     lotteryTicket.save().then((err, doc) => {
         console.log("Save callback - " + doc);
-        //doc.
     });
 
     return lotteryTicket;
@@ -57,6 +56,12 @@ lotteryTicketSchema.methods.amendTicket = function (newLines) {
     });
 
     this.lines.sort((a, b) => a.outcome - b.outcome);
+    this.save();
+}
+
+lotteryTicketSchema.methods.checkStatus = function () {
+
+    this.status = config.STATUS_CHECKED;
     this.save();
 }
 

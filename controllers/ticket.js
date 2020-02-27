@@ -86,8 +86,6 @@ exports.amendTicket = (req, res, next) => {
         res.status(201);
         res.send(dbResult);
     });
-
-
 }
 
 /**
@@ -101,8 +99,9 @@ exports.ticketStatus = (req, res, next) => {
         if (!dbResult) throw new HTTPErrorHandler(404, errors.TICKET_NOT_FOUND);
         let currentStatus = dbResult.status;
         if (currentStatus == config.STATUS_UNCHECKED) {
-            dbResult.status = config.STATUS_CHECKED;
-            dbResult.save();
+            //dbResult.status = config.STATUS_CHECKED;
+            dbResult.checkStatus();
+            //dbResult.save();
         }
         res.send({ id: dbResult._id, status: currentStatus });
     });

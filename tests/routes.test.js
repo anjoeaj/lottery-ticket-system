@@ -70,6 +70,7 @@ describe('Post Endpoints', () => {
     });
 });
 
+
 describe('Get all lottery tickets', () => {
     it('should get all lottery tickets', async () => {
         const res = await request(app)
@@ -107,11 +108,38 @@ describe('Amend a lottery ticket', () => {
                 ]
             })
         expect(res.statusCode).toEqual(201)
+    });
+
+    it('should check status once', async () => {
+        const res = await request(app)
+            .put('/status/5e578df4ef32e7c124c53f2c')
+            .send()
+        expect(res.statusCode).toEqual(200)
     })
+
+    it('should fail and return 400 when tried to amend again after checking status', async () => {
+        const res = await request(app)
+            .put('/ticket/5e578df4ef32e7c124c53f2c')
+            .send({
+                "lines": [
+                    [
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        0,
+                        2,
+                        0
+                    ]
+                ]
+            })
+        expect(res.statusCode).toEqual(400)
+    });
 });
 
 describe('Get status endpoint', () => {
-    it('should get all lottery tickets', async () => {
+    it('should check status', async () => {
         const res = await request(app)
             .put('/status/5e55380fb33a4d7a48bfc18a')
             .send()

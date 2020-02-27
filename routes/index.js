@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-//Require controller modules
-// delete require.cache[require.resolve('../controllers/ticket')]
 var ticketController = require('../controllers/ticket');
 
 router.get('/', (req, res, next) => {
